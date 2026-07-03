@@ -6,75 +6,70 @@ const startBtn = document.getElementById("start-btn");
 
 startBtn.addEventListener("click", function() {
   
-  // 1. Setup/Lock Interface
   startBtn.disabled = true;
   startBtn.innerText = "Processing...";
 
-  // Reset bread state instantly (0s transition)
+  // Reset the bread position and color instantly
   bread.style.transition = "none";
-  bread.style.backgroundColor = "#fdf5e6"; // Reset color
-  bread.style.top = "-70px"; // Hide above toaster
-  bread.style.transform = "translateX(0) translateY(0)"; // Reset movement
+  bread.style.backgroundColor = "#fdf5e6"; 
+  bread.style.top = "-70px"; 
+  bread.style.transform = "translateX(0) translateY(0)"; 
 
-  // 2. Read Settings
+  // Calculate the new variables based on user inputs
   const speed = parseInt(speedSlider.value);
   const totalHeat = parseInt(topHeatSlider.value) + parseInt(bottomHeatSlider.value);
 
-  // 3. Calculate Timings and Color
-  // Lincat Speed 1 (Slow) = 10s internal time. Speed 10 (Fast) = 2s internal time.
+  // Speed 10 = 1s duration. Speed 1 = 10s duration.
   const internalDuration = 11 - speed; 
   const darknessScore = totalHeat * internalDuration;
 
-  // Determine color (same logic as before)
+  // The newly recalibrated color logic
   let finalColor = "#fdf5e6"; 
-  if (darknessScore > 150) finalColor = "#2b1b10"; // Burnt
-  else if (darknessScore > 100) finalColor = "#5c3317"; // Dark brown
-  else if (darknessScore > 50) finalColor = "#c58346"; // Golden
-  else if (darknessScore > 20) finalColor = "#e6bc98"; // Lightly toasted
+  
+  if (darknessScore >= 140) {
+      finalColor = "#2b1b10"; // Burnt (e.g. 2/9/9 = Score 162)
+  } else if (darknessScore >= 110) {
+      finalColor = "#5c3317"; // Very Dark 
+  } else if (darknessScore >= 75) {
+      finalColor = "#c58346"; // Perfectly Toasted (e.g. 6/9/9 = Score 90)
+  } else if (darknessScore >= 40) {
+      finalColor = "#e6bc98"; // Not very toasted (e.g. 5/5/5 = Score 60)
+  } else {
+      finalColor = "#f3e5ab"; // Barely Warmed (Too fast or too cold)
+  }
 
-  // 4. Start the Sequence (Short delay for reset)
+  // The multi-stage animation sequence
   setTimeout(function() {
 
-    // STAGE 1: Drop into Toaster
-    // Bread appears on top rack, then moves Y into the chute
+    // Stage 1: Drop into toaster
     bread.style.transition = "top 0.5s ease-in-out, transform 0.5s ease-in-out";
-    bread.style.top = "10px"; // Appears on top rack
+    bread.style.top = "10px"; 
 
-    // Short delay before dropping *inside*
     setTimeout(() => {
-        // Drop inside (moves down, and overflow:hidden will conceal it)
+        // Stage 2: Enter the main heating chamber
         bread.style.transition = "top 0.6s ease-in, background-color 0.1s";
         bread.style.top = "100px"; 
     }, 600);
 
-    // STAGE 2: internal Toasting (Simulated wait)
-    // After 1.2s (drop sequence), we 'start toasting'. The bread is hidden.
     setTimeout(() => {
-        // Activate elements visual (make them glow red)
+        // Stage 3: Turn on elements and start color change
         document.querySelectorAll('.element').forEach(el => el.style.backgroundColor = '#ff4500');
         
-        // We animate the color change smoothly OVER the conveyor duration,
-        // even though you can't see it yet.
         bread.style.transition = `background-color ${internalDuration}s linear`;
         bread.style.backgroundColor = finalColor;
         
         startBtn.innerText = `Toasting (${internalDuration}s)...`;
     }, 1200);
 
-    // STAGE 3: Exit (Emerge in tray)
-    // This happens exactly when the toasting time ends (1.2s setup + duration)
     setTimeout(() => {
-        // Deactivate elements
+        // Stage 4: Turn off elements and drop to exit tray
         document.querySelectorAll('.element').forEach(el => el.style.backgroundColor = '#555');
 
-        // We need to 'teleport' the bread instantly to just above the exit tray 
-        // while it's still hidden by overflow:hidden.
         bread.style.transition = "none";
-        bread.style.top = "180px"; // Ready to emerge
+        bread.style.top = "180px"; 
 
-        // Introduce a tiny gap to allow the 'teleport' to happen before we animate the emergence.
         setTimeout(() => {
-            // Emerge: Animate the bread dropping into the tray, and slightly forward.
+            // Stage 5: Slide out of the bottom
             bread.style.transition = "transform 0.8s ease-out";
             bread.style.transform = "translateY(40px) translateX(15px) rotate(5deg)"; 
             startBtn.innerText = "Enjoy!";
@@ -82,13 +77,11 @@ startBtn.addEventListener("click", function() {
 
     }, 1200 + (internalDuration * 1000));
 
-    // STAGE 4: Final Reset (unlock button)
-    // Allow 1 second after emerging before unlocking the button.
+    // Reset the button after animation finishes
     setTimeout(() => {
         startBtn.disabled = false;
         startBtn.innerText = "Start Toasting";
     }, 1200 + (internalDuration * 1000) + 1000);
 
   }, 100);
-
 });
