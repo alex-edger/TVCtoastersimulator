@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>TVC Toaster Simulator</title>
+  
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ff7b00">
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(reg => console.log('Service Worker registered!'))
+          .catch(err => console.error('Service Worker failed', err));
+      });
+    }
+  </script>
+</head>
+<body>
+
+  <div class="simulator-container">
+    <h2>TVC Toaster Simulator</h2>
+
+    <div class="toaster-housing">
+      <img src="publicis-logo.png" class="toaster-logo" alt="Publicis Logo">
+      
+      <div class="loading-rack">
+        <div class="bread" id="bread-slice"></div>
+      </div>
+      <div class="internal-chute">
+        <div class="element top-element"></div>
+        <div class="element bottom-element"></div>
+      </div>
+      <div class="exit-tray"></div>
+    </div>
+
+    <div class="controls">
+      <div class="control-group">
+        <label for="speed">Conveyor Speed:</label>
+        <input type="range" id="speed" min="1" max="10" value="5">
+        <div class="slider-labels">
+          <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+        </div>
+      </div>
+      <div class="control-group">
+        <label for="top-heat">Top Heat:</label>
+        <input type="range" id="top-heat" min="1" max="10" value="5">
+        <div class="slider-labels">
+          <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+        </div>
+      </div>
+      <div class="control-group">
+        <label for="bottom-heat">Bottom Heat:</label>
+        <input type="range" id="bottom-heat" min="1" max="10" value="5">
+        <div class="slider-labels">
+          <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+        </div>
+      </div>
+      <button id="start-btn">Start Toasting</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
