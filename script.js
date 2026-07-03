@@ -22,17 +22,19 @@ startBtn.addEventListener("click", function() {
 
   let finalColor = "#fdf5e6"; 
   
-  // Recalibrated visual thresholds
+  // The newly stretched curve
   if (darknessScore >= 140) {
       finalColor = "#2b1b10"; // Burnt (e.g. 2/9/9 = Score 162)
   } else if (darknessScore >= 110) {
-      finalColor = "#5c3317"; // Very Dark 
-  } else if (darknessScore >= 85) {
+      finalColor = "#7a4419"; // Very Dark 
+  } else if (darknessScore >= 80) {
       finalColor = "#c58346"; // Perfectly Toasted (e.g. 6/9/9 = Score 90)
   } else if (darknessScore >= 65) {
-      finalColor = "#e6bc98"; // Lightly Toasted 
+      finalColor = "#e2b778"; // Lightly Toasted 
+  } else if (darknessScore >= 40) {
+      finalColor = "#f2e1c1"; // Barely Warmed (e.g. 5/5/5 = Score 60)
   } else {
-      finalColor = "#f5deb3"; // Barely Warmed (e.g. 5/5/5 = Score 60)
+      finalColor = "#fdf5e6"; // Literally Raw (too fast/too cold)
   }
 
   setTimeout(function() {
